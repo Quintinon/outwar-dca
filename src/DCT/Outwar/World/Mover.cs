@@ -272,7 +272,7 @@ namespace DCT.Outwar.World
                         if (rooms.Count > 1)
                         {
                             // should only be one match
-                            MessageBox.Show("problem");
+                            //MessageBox.Show("problem");
                             CoreUI.Instance.LogPanel.Log(string.Format("Potential duplicate room {0}", Location.Id));
                         }
 

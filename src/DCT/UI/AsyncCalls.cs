@@ -110,7 +110,7 @@ namespace DCT.UI
 
         internal void AttackMobs()
         {
-            if (MobsPanel.CheckedIndices.Count < 1)
+            if (MobsPanel.CheckedMobs.Count < 1)
             {
                 LogPanel.Log("E: Choose at least 1 mob to attack");
                 return;
@@ -118,15 +118,19 @@ namespace DCT.UI
             
             // sort by value - ie., sort by room number
             List<AttackHandler.MobArg> mobs = new List<AttackHandler.MobArg>();
-            foreach (int i in MobsPanel.CheckedIndices)
+            
+            foreach (DCT.UI.MobsPanel_v2.DataGridMob dgm in MobsPanel.CheckedMobs)
             {
-                int id = int.Parse(MobsPanel.Mobs[i].SubItems[1].Text);
-                int room = int.Parse(MobsPanel.Mobs[i].SubItems[2].Text);
-                string name = MobsPanel.Mobs[i].SubItems[0].Text;
-                AttackHandler.MobArg arg = new AttackHandler.MobArg(id, room, name);
-                if (!mobs.Contains(arg))
+                for(int i = 0; i < dgm.Ids.Count; i++)
                 {
-                    mobs.Add(arg);
+                    int id = (int)dgm.Ids[i];
+                    int room = (int)dgm.Rooms[i];
+                    string name = dgm.Name;
+                    AttackHandler.MobArg arg = new AttackHandler.MobArg(id, room, name);
+                    if (!mobs.Contains(arg))
+                    {
+                        mobs.Add(arg);
+                    }
                 }
             }
             mobs.Sort(

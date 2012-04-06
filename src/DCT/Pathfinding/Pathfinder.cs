@@ -58,11 +58,14 @@ namespace DCT.Pathfinding
             //*
             for (int i = 0; i < 2 && Rooms.Count < 1; i++)
             {
-                if (!File.Exists("rooms.dat") || update)
+                /*if (!File.Exists("rooms.dat") || update)
                 {
                     Download("rooms");
                 }
                 if ((map = ReadDecrypt("rooms")) == null)
+                    continue;*/
+                map = ReadPlain("rooms");
+                if (map == null)
                     continue;
 
                 foreach (string token in map.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
@@ -96,12 +99,16 @@ namespace DCT.Pathfinding
             string[] parts;
             for (int i = 0; i < 2 && Mobs.Count < 1; i++)
             {
-                if (!File.Exists("mobs.dat") || update)
+                /*if (!File.Exists("mobs.dat") || update)
                 {
                     Download("mobs");
                 }
                 if ((map = ReadDecrypt("mobs")) == null)
+                    continue;*/
+                map = ReadPlain("mobs");
+                if (map == null)
                     continue;
+
                 foreach (string token in map.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (string.IsNullOrEmpty(token.Trim()) || token.StartsWith("#"))
@@ -225,6 +232,28 @@ namespace DCT.Pathfinding
                 sr.Close();
             }
             return Crypt.Get(Crypt.HexToBin(text), HttpSocket.DefaultInstance.UserAgent, false);
+        }
+
+        internal static string ReadPlain(string maptype)
+        {
+            if (!File.Exists(maptype + ".txt"))
+                return null;
+
+            StreamReader sr = new StreamReader(maptype + ".txt");
+            string text;
+            try
+            {
+                text = sr.ReadToEnd();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            finally
+            {
+                sr.Close();
+            }
+            return text;
         }
 
         internal static string BadLinks()

@@ -4,6 +4,7 @@ using DCT.Settings;
 using DCT.Threading;
 using DCT.UI;
 using DCT.Util;
+using System;
 
 namespace DCT.Outwar.World
 {
@@ -108,7 +109,8 @@ namespace DCT.Outwar.World
             Mobs = new List<Mob>();
 
 
-            foreach (string s in Parser.MultiParse(src, "images//", "spacer.gif"))
+            //foreach (string s in Parser.MultiParse(src, "<table ", "</table>"))
+            foreach(string s in src.Split(new string[] { "<table "}, StringSplitOptions.RemoveEmptyEntries))
             {
                 Parser p = new Parser(s);
 
@@ -139,12 +141,13 @@ namespace DCT.Outwar.World
                 }
                 else
                 {
-                    name = Parser.Parse(Parser.CutLeading(s, url + "\">"), "\">", " [");
+                    //name = Parser.Parse(Parser.CutLeading(s, url + "\">"), "\">", " [");
+                    name = Parser.Parse(s, "><b>", "</b>"); // "'<b>Spawned By:</b>" occurs, use ><b> for starting
                 }
 
-                if (s.Contains("newattack.php"))
+                if (s.Contains("somethingelse.php"))
                 {
-                    attackurl = "newattack.php" + p.Parse("newattack.php", "\"");
+                    attackurl = "somethingelse.php" + p.Parse("somethingelse.php", "\"");
                 }
                 else
                 {

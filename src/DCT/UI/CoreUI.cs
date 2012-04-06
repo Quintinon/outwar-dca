@@ -57,7 +57,7 @@ namespace DCT.UI
 
         internal RoomsPanel RoomsPanel { get; private set; }
 
-        internal MobsPanel MobsPanel { get; private set; }
+        internal MobsPanel_v2 MobsPanel { get; private set; }
 
         internal RaidsPanel RaidsPanel { get; private set; }
 
@@ -82,7 +82,7 @@ namespace DCT.UI
         public CoreUI()
         {
             InitializeComponent();
-
+            DebugVisible = true;
             // silver vs2008 toolstrip look
             TanColorTable colorTable = new TanColorTable();
             colorTable.UseSystemColors = true;
@@ -115,7 +115,7 @@ namespace DCT.UI
             RoomsPanel.Dock = DockStyle.Fill;
             tabs.TabPages[TABINDEX_ROOMS].Controls.Add(RoomsPanel);
 
-            MobsPanel = new MobsPanel(this);
+            MobsPanel = new MobsPanel_v2(this);
             MobsPanel.Dock = DockStyle.Fill;
             tabs.TabPages[TABINDEX_MOBS].Controls.Add(MobsPanel);
 
@@ -1017,10 +1017,11 @@ namespace DCT.UI
 
             sb.AppendFormat("{0} mobs loaded\n", MobsPanel.Mobs.Count);
             sb.AppendFormat("{0} mobs checked:\n", MobsPanel.CheckedMobs.Count);
-            foreach (ListViewItem i in MobsPanel.CheckedMobs)
+            foreach (DCT.UI.MobsPanel_v2.DataGridMob i in MobsPanel.CheckedMobs)
             {
                 // name, id, roomid
-                sb.AppendFormat("\t{0} ({1}, {2})\n", i.SubItems[0].Text, i.SubItems[1].Text, i.SubItems[2].Text);
+                for(int j = 0; j < i.Ids.Count; j++)
+                    sb.AppendFormat("\t{0} ({1}, {2})\n", i.Name, i.Ids[j], i.Rooms[j]);
             }
             sb.Append("\n\n");
 

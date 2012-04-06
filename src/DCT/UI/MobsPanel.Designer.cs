@@ -37,16 +37,17 @@ namespace DCT.UI
             this.lnkMobLoad = new System.Windows.Forms.LinkLabel();
             this.lnkUncheckMobs = new System.Windows.Forms.LinkLabel();
             this.lvMobs = new System.Windows.Forms.ListView();
-            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader7 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnMobGo = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lnkMobSave
             // 
+            this.lnkMobSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkMobSave.AutoSize = true;
             this.lnkMobSave.Location = new System.Drawing.Point(158, 241);
             this.lnkMobSave.Name = "lnkMobSave";
@@ -58,6 +59,7 @@ namespace DCT.UI
             // 
             // lnkMobsSelect
             // 
+            this.lnkMobsSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkMobsSelect.AutoSize = true;
             this.lnkMobsSelect.Location = new System.Drawing.Point(2, 258);
             this.lnkMobsSelect.Name = "lnkMobsSelect";
@@ -88,6 +90,7 @@ namespace DCT.UI
             // 
             // btnPotionMobsSelect
             // 
+            this.btnPotionMobsSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnPotionMobsSelect.Location = new System.Drawing.Point(365, 244);
             this.btnPotionMobsSelect.Name = "btnPotionMobsSelect";
             this.btnPotionMobsSelect.Size = new System.Drawing.Size(54, 22);
@@ -98,6 +101,7 @@ namespace DCT.UI
             // 
             // cmbPotionMobs
             // 
+            this.cmbPotionMobs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cmbPotionMobs.Items.AddRange(new object[] {
             "Kix",
             "Kinetic",
@@ -113,6 +117,7 @@ namespace DCT.UI
             // 
             // lnkMobLoad
             // 
+            this.lnkMobLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkMobLoad.AutoSize = true;
             this.lnkMobLoad.Location = new System.Drawing.Point(73, 241);
             this.lnkMobLoad.Name = "lnkMobLoad";
@@ -124,6 +129,7 @@ namespace DCT.UI
             // 
             // lnkUncheckMobs
             // 
+            this.lnkUncheckMobs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkUncheckMobs.AutoSize = true;
             this.lnkUncheckMobs.Location = new System.Drawing.Point(2, 241);
             this.lnkUncheckMobs.Name = "lnkUncheckMobs";
@@ -135,6 +141,9 @@ namespace DCT.UI
             // 
             // lvMobs
             // 
+            this.lvMobs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lvMobs.CheckBoxes = true;
             this.lvMobs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader3,
@@ -150,8 +159,8 @@ namespace DCT.UI
             this.lvMobs.TabIndex = 9;
             this.lvMobs.UseCompatibleStateImageBehavior = false;
             this.lvMobs.View = System.Windows.Forms.View.Details;
-            this.lvMobs.SelectedIndexChanged += new System.EventHandler(this.lvMobs_SelectedIndexChanged);
             this.lvMobs.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvMobs_ColumnClick);
+            this.lvMobs.SelectedIndexChanged += new System.EventHandler(this.lvMobs_SelectedIndexChanged);
             // 
             // columnHeader3
             // 

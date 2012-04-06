@@ -55,7 +55,7 @@ namespace DCT.UI
 
             if (src.Contains("<msg>"))
             {
-                MessageBox.Show(p.Parse("<msg>", "</msg>"), "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                //MessageBox.Show(p.Parse("<msg>", "</msg>"), "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 this.Focus();
                 txtMain.SelectionLength = 0;
             }

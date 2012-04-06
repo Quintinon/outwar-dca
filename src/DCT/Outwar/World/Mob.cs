@@ -357,7 +357,7 @@ namespace DCT.Outwar.World
 
             if (!mSkipLoad)
             {
-                mAttackUrl = "newattack.php" + new Parser(mLoadSrc).Parse("newattack.php", "\"");
+                mAttackUrl = "somethingelse.php" + new Parser(mLoadSrc).Parse("somethingelse.php", "\"");
             }
             EvaluateOutcome(mRoom.Mover.Socket.Get(mAttackUrl));
 

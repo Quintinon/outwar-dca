@@ -23,8 +23,8 @@ namespace DCT.Settings
                 sw.Close();
 
                 sw = new StreamWriter(STR_SavedMobsini);
-                foreach (ListViewItem item in CoreUI.Instance.MobsPanel.CheckedMobs)
-                    sw.WriteLine(item.SubItems[1].Text);
+                foreach (DCT.UI.MobsPanel_v2.DataGridMob item in CoreUI.Instance.MobsPanel.CheckedMobs)
+                    sw.WriteLine(item.Name);
 
                 sw.Flush();
                 sw.Close();
@@ -77,11 +77,12 @@ namespace DCT.Settings
                     sr = new StreamReader(STR_SavedMobsini);
                     while ((input = sr.ReadLine()) != null)
                     {
-                        foreach (ListViewItem item in CoreUI.Instance.MobsPanel.Mobs)
+                        foreach (DCT.UI.MobsPanel_v2.DataGridMob item in CoreUI.Instance.MobsPanel.Mobs)
                         {
-                            if (item.SubItems[1].Text == input)
+                            if (item.Name == input)
                             {
-                                item.Checked = true;
+                                // TODO, Make sure Object reference setting works here!
+                                item.IsChecked = true;
                                 break;
                             }
                         }
