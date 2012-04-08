@@ -156,6 +156,14 @@ namespace DCT.UI
                 return;
             }
 
+            for (int i = 0; i < Engine.Count; i++)
+            {
+                // TODO: Thread this, it freezes the gui
+                Engine.Accounts[i].Mover.RefreshRoom();
+                mUI.UpdateDisplay(Engine.Accounts[i]);
+            }
+
+            /*
             // save checks
             mSavedChecks = new int[lvAccounts.CheckedIndices.Count];
 
@@ -167,7 +175,7 @@ namespace DCT.UI
             mRestoreChecks = true;
             // do refresh
             Logout();
-            Login();
+            Login();*/
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
@@ -229,8 +237,9 @@ namespace DCT.UI
 
             if (n < 1)
             {
-                txtUsername.Text = string.Empty;
-                txtPassword.Text = string.Empty;
+                // No need to clear login info ... its just a pain
+                //txtUsername.Text = string.Empty;
+                //txtPassword.Text = string.Empty;
                 btnLogin.Enabled = true;
                 btnLogout.Enabled = false;
                 btnRefresh.Enabled = false;
@@ -242,7 +251,8 @@ namespace DCT.UI
                 for (int i = mEngine.Count - n; i < mEngine.Count; i++)
                 {
                     Account a = mEngine.Accounts[i];
-                    var item = new ListViewItem(new[] {a.Name, "Loaded", "-", "0", "0", "0"});
+                    a.Security = tbSecurity.Text;
+                    var item = new ListViewItem(new[] {a.Name, "Loaded", "-", "0", "0", "0", "0"});
                     lvAccounts.Groups[Server.NameToId(a.Server) - 1].Items.Add(item);
                     lvAccounts.Items.Add(item);
                 }

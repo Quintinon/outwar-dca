@@ -47,6 +47,7 @@ namespace DCT.Outwar.World
                 url += "&door=1";
             }
             string src = Mover.Socket.Get(url);
+            src = src.Replace("\\s", "s"); // Hack for new Outwar regex
             src = System.Text.RegularExpressions.Regex.Unescape(src);
 
             Parser p = new Parser(src);
@@ -209,6 +210,7 @@ namespace DCT.Outwar.World
             }
         }
 
+
         /// <summary>
         /// Attack all the mobs in this room
         /// </summary>
@@ -274,6 +276,21 @@ namespace DCT.Outwar.World
                     return;
                 }
             }
+        }
+
+        internal int AttackMobs(string name, int amount)
+        {
+            int count = 0;
+            foreach (Mob mb in Mobs)
+            {
+                if (mb.Name == name && count < amount)
+                {
+                    AttackMob(mb);
+                    if (mb.Won)
+                        count++;
+                }
+            }
+            return count;
         }
 
         internal void AttackSpawns()

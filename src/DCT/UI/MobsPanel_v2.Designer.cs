@@ -41,6 +41,7 @@ namespace DCT.UI
             this.CountColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LevelColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RageColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMobs)).BeginInit();
             this.SuspendLayout();
             // 
@@ -141,10 +142,14 @@ namespace DCT.UI
             this.CountColumn,
             this.LevelColumn,
             this.RageColumn});
-            this.dgvMobs.Location = new System.Drawing.Point(10, 31);
+            this.dgvMobs.Location = new System.Drawing.Point(10, 56);
             this.dgvMobs.Name = "dgvMobs";
-            this.dgvMobs.Size = new System.Drawing.Size(409, 207);
+            this.dgvMobs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvMobs.Size = new System.Drawing.Size(409, 182);
             this.dgvMobs.TabIndex = 19;
+            this.dgvMobs.CurrentCellChanged += new System.EventHandler(this.dgvMobs_CurrentCellChanged);
+            this.dgvMobs.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dgvMobs_SortCompare);
+            this.dgvMobs.Leave += new System.EventHandler(this.dgvMobs_Leave);
             // 
             // CheckBoxColumn
             // 
@@ -182,10 +187,19 @@ namespace DCT.UI
             this.RageColumn.ReadOnly = true;
             this.RageColumn.Width = 50;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(10, 30);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(196, 20);
+            this.textBox1.TabIndex = 20;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // MobsPanel_v2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dgvMobs);
             this.Controls.Add(this.btnMobGo);
             this.Controls.Add(this.lnkMobsSelect);
@@ -219,5 +233,6 @@ namespace DCT.UI
         private System.Windows.Forms.DataGridViewTextBoxColumn CountColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LevelColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn RageColumn;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

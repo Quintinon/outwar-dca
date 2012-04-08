@@ -284,7 +284,8 @@ namespace DCT.Pathfinding
 
         internal static List<int> BFS(int s, int d)
         {
-            lock (Rooms)
+            return BFS(s, new List<int> { d });
+            /*lock (Rooms)
             {
                 InitBFSVertices();
                 Queue<MappedRoom> Q = new Queue<MappedRoom>();
@@ -303,6 +304,45 @@ namespace DCT.Pathfinding
                         // return a result
                         return BFSPath(source, dequeued);
                     }
+                    foreach (MappedRoom neighbor in dequeued.MappedNeighbors)
+                    {
+                        if (!neighbor.Visited)
+                        {
+                            neighbor.Visited = true;
+                            neighbor.Pi = dequeued;
+                            Q.Enqueue(neighbor);
+                        }
+                    }
+                }
+                return null;
+            }*/
+        }
+
+        internal static List<int> BFS(int source, List<int> dest)
+        {
+            dest.Sort();
+
+            lock (Rooms)
+            {
+                InitBFSVertices();
+                Queue<MappedRoom> Q = new Queue<MappedRoom>();
+                int srcidx = FindRoom(source);    // logn
+                if (srcidx < 0)
+                    return null;
+                MappedRoom sourceRoom = Rooms[srcidx];
+                sourceRoom.Visited = true;
+                Q.Enqueue(sourceRoom);
+
+                while (Q.Count > 0)
+                {
+                    MappedRoom dequeued = Q.Dequeue();
+                    // Find the shortest path to ANY node, best idea evar!
+                    if (dest.BinarySearch(dequeued.Id) >= 0)
+                    {
+                        // return a result
+                        return BFSPath(sourceRoom, dequeued);
+                    }
+
                     foreach (MappedRoom neighbor in dequeued.MappedNeighbors)
                     {
                         if (!neighbor.Visited)
@@ -367,20 +407,33 @@ namespace DCT.Pathfinding
                 }
             }
 
-            List<int> ret = BFS(start, idList[0]);
+            //List<int> ret = BFS(start, idList[0]);
+            List<int> ret = BFS(start, idList);
             if (ret == null)
             {
                 return null;
             }
 
-            for(int i = 1; i < idList.Count; i++)
+            // Remove the one found in the list
+            idList.Remove(ret[ret.Count - 1]);
+
+            while (idList.Count > 0)
+            {
+                // Go from last found node to shortest next node
+                List<int> tmp = BFS(ret[ret.Count - 1], idList);
+                if (tmp != null)
+                    ret.AddRange(tmp);
+            }
+
+
+            /*for(int i = 1; i < idList.Count; i++)
             {
                 List<int> tmp = BFS(idList[i - 1], idList[i]);
                 if (tmp != null)
                 {
                     ret.AddRange(tmp);
                 }
-            }
+            }*/
 
             return ret;
         }

@@ -217,10 +217,12 @@ namespace DCT.UI
 
             if (AccountsPanel.Engine.MainAccount != null)
             {
+                UpdateDisplay(AccountsPanel.Engine.MainAccount);
+                
                 lblExp.Text = string.Format("{0:n0}", AccountsPanel.Engine.MainAccount.Exp);
                 lblRage.Text = string.Format("{0:n0}", AccountsPanel.Engine.MainAccount.Rage);
                 lblGold.Text = string.Format("{0:n0}", AccountsPanel.Engine.MainAccount.Gold);
-
+                /*
                 Account a = AccountsPanel.Engine.MainAccount;
                 int i = AccountsPanel.Engine.Accounts.IndexOf(a);
                 AccountsPanel.Accounts[i].SubItems[0].Text = a.Name;
@@ -228,6 +230,35 @@ namespace DCT.UI
                 AccountsPanel.Accounts[i].SubItems[2].Text = a.Mover.MobsAttacked.ToString();
                 AccountsPanel.Accounts[i].SubItems[3].Text = a.Mover.ExpGained.ToString();
                 AccountsPanel.Accounts[i].SubItems[4].Text = a.Mover.MobsAttacked == 0 ? "-" : (a.Mover.ExpGained / a.Mover.MobsAttacked).ToString();
+                 * */
+            }
+        }
+
+        internal void UpdateDisplay(Account acc)
+        {
+            if (InvokeRequired)
+            {
+                //Invoke(new MethodInvoker(UpdateDisplay));
+                Invoke((Delegate)new System.Action<Account>((Account _acc) => { UpdateDisplay(_acc); }), new[] { acc });
+                return;
+            }
+
+            lblMisc.Text = "Experience gained: " + Globals.ExpGained;
+
+            if (acc != null)
+            {
+                //lblExp.Text = string.Format("{0:n0}", acc.Exp);
+                //lblRage.Text = string.Format("{0:n0}", acc.Rage);
+                //lblGold.Text = string.Format("{0:n0}", acc.Gold);
+
+                int i = AccountsPanel.Engine.Accounts.IndexOf(acc);
+                AccountsPanel.Accounts[i].SubItems[0].Text = acc.Name;
+                AccountsPanel.Accounts[i].SubItems[1].Text = acc.Mover.Location == null ? "-" : acc.Mover.Location.Id.ToString();
+                AccountsPanel.Accounts[i].SubItems[2].Text = acc.Mover.MobsAttacked.ToString();
+                AccountsPanel.Accounts[i].SubItems[3].Text = acc.Mover.ExpGained.ToString();
+                AccountsPanel.Accounts[i].SubItems[4].Text = acc.Mover.MobsAttacked == 0 ? "-" : (acc.Mover.ExpGained / acc.Mover.MobsAttacked).ToString();
+                AccountsPanel.Accounts[i].SubItems[5].Text = acc.Rage.ToString();
+                AccountsPanel.Accounts[i].SubItems[6].Text = acc.Level.ToString();
             }
         }
 
@@ -400,6 +431,9 @@ namespace DCT.UI
                     break;
                 case AttackingType.Rooms:
                     cmbAttackMode.SelectedIndex = 3;
+                    break;
+                case AttackingType.Quests:
+                    cmbAttackMode.SelectedIndex = 4;
                     break;
                 default: throw new Exception("Your settings are corrupt; no such attack mode.");
             }
@@ -742,6 +776,9 @@ namespace DCT.UI
                 case "rooms":
                     Settings.AttackMode = AttackingType.Rooms;
                     break;
+                case "quests":
+                    Settings.AttackMode = AttackingType.Quests;
+                    break;
             }
         }
 
@@ -786,6 +823,7 @@ namespace DCT.UI
                 case AttackingType.MultiArea: AttackAreas(); break;
                 case AttackingType.Mobs: AttackMobs(); break;
                 case AttackingType.Rooms: AttackRooms(); break;
+                case AttackingType.Quests: AttackQuests(); break;
             }
         }
 
@@ -1039,6 +1077,11 @@ namespace DCT.UI
             sb.Append(new ConfigSerializer().StringSerialize(Settings));
 
             return sb.ToString();
+        }
+
+        private void exportNewMobsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Pathfinding.MobCollector.Submit();
         }
     }
 }

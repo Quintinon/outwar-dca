@@ -98,10 +98,21 @@ namespace DCT.Outwar
             HttpSocket.DefaultInstance.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:0.9.4) Gecko/20011019 Netscape6/6.2";
             HttpSocket.DefaultInstance.Cookie = null;
 
-            HttpSocket.DefaultInstance.Get(string.Format("http://www.outwar.com/myaccount.php?rg_sess_id={0}&serverid={1}&suid={2}",
+            /*HttpSocket.DefaultInstance.Get(string.Format("http://www.outwar.com/myaccount.php?rg_sess_id={0}&serverid={1}&suid={2}",
                     RgSessId,
                     Server.NameToId(MainAccount.Server),
-                    MainAccount.Id));
+                    MainAccount.Id));*/
+            int serverid = 1;
+            long characterid = 1;
+            if (MainAccount != null)
+            {
+                serverid = Server.NameToId(MainAccount.Server);
+                characterid = MainAccount.Id;
+            }
+            HttpSocket.DefaultInstance.Get(string.Format("http://www.outwar.com/myaccount.php?rg_sess_id={0}&serverid={1}&suid={2}",
+                rgsessid,
+                serverid,
+                characterid));
 
             int ret = AddCharacters();
 

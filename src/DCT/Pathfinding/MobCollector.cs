@@ -4,6 +4,7 @@ using System.Text;
 using System.Web;
 using DCT.Outwar.World;
 using DCT.Protocols.Http;
+using DCT.Util;
 
 namespace DCT.Pathfinding
 {
@@ -39,6 +40,7 @@ namespace DCT.Pathfinding
 
         internal static void Submit()
         {
+            // TODO: Make this update OUR database of monsters
             StringBuilder sb = new StringBuilder();
             foreach (MappedMob mb in mMobs)
             {
@@ -46,8 +48,11 @@ namespace DCT.Pathfinding
             }
 
             // send data
-            HttpSocket s = new HttpSocket();
-            s.Post(SUBMIT_URL, string.Format("mobs={0}", HttpUtility.UrlEncode(sb.ToString())));
+            //HttpSocket s = new HttpSocket();
+            //s.Post(SUBMIT_URL, string.Format("mobs={0}", HttpUtility.UrlEncode(sb.ToString())));
+
+            FileIO.SaveFileFromString("Export New Monsters", "Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
+                "DCT mobs.txt", sb.ToString());
 
             mSubmitted.AddRange(mMobs);
             mMobs.Clear();

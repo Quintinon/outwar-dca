@@ -30,6 +30,7 @@ namespace DCT.UI
         {
             this.grpConnections = new System.Windows.Forms.GroupBox();
             this.pnl = new System.Windows.Forms.Panel();
+            this.lnkChkServer = new System.Windows.Forms.LinkLabel();
             this.lnkAccountsCheckAll = new System.Windows.Forms.LinkLabel();
             this.lnkAccountsUncheckAll = new System.Windows.Forms.LinkLabel();
             this.btnRefresh = new System.Windows.Forms.Button();
@@ -40,14 +41,17 @@ namespace DCT.UI
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lvAccounts = new System.Windows.Forms.ListView();
-            this.clmCharName = new System.Windows.Forms.ColumnHeader();
-            this.clmInRoom = new System.Windows.Forms.ColumnHeader();
-            this.clmMobs = new System.Windows.Forms.ColumnHeader();
-            this.clmEXP = new System.Windows.Forms.ColumnHeader();
-            this.clmAvgExp = new System.Windows.Forms.ColumnHeader();
+            this.clmCharName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmInRoom = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmMobs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmEXP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmAvgExp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.login_rgsessid = new System.ComponentModel.BackgroundWorker();
             this.login_normal = new System.ComponentModel.BackgroundWorker();
-            this.lnkChkServer = new System.Windows.Forms.LinkLabel();
+            this.clmRage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmLevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbSecurity = new System.Windows.Forms.TextBox();
             this.grpConnections.SuspendLayout();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
@@ -59,13 +63,15 @@ namespace DCT.UI
             this.grpConnections.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpConnections.Location = new System.Drawing.Point(0, 0);
             this.grpConnections.Name = "grpConnections";
-            this.grpConnections.Size = new System.Drawing.Size(230, 422);
+            this.grpConnections.Size = new System.Drawing.Size(326, 450);
             this.grpConnections.TabIndex = 12;
             this.grpConnections.TabStop = false;
             this.grpConnections.Text = "Connections";
             // 
             // pnl
             // 
+            this.pnl.Controls.Add(this.tbSecurity);
+            this.pnl.Controls.Add(this.label3);
             this.pnl.Controls.Add(this.lnkChkServer);
             this.pnl.Controls.Add(this.lnkAccountsCheckAll);
             this.pnl.Controls.Add(this.lnkAccountsUncheckAll);
@@ -79,8 +85,19 @@ namespace DCT.UI
             this.pnl.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnl.Location = new System.Drawing.Point(3, 314);
             this.pnl.Name = "pnl";
-            this.pnl.Size = new System.Drawing.Size(230, 105);
+            this.pnl.Size = new System.Drawing.Size(227, 133);
             this.pnl.TabIndex = 13;
+            // 
+            // lnkChkServer
+            // 
+            this.lnkChkServer.AutoSize = true;
+            this.lnkChkServer.Location = new System.Drawing.Point(120, 5);
+            this.lnkChkServer.Name = "lnkChkServer";
+            this.lnkChkServer.Size = new System.Drawing.Size(76, 13);
+            this.lnkChkServer.TabIndex = 12;
+            this.lnkChkServer.TabStop = true;
+            this.lnkChkServer.Text = "Check server..";
+            this.lnkChkServer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkChkServer_LinkClicked);
             // 
             // lnkAccountsCheckAll
             // 
@@ -107,7 +124,7 @@ namespace DCT.UI
             // btnRefresh
             // 
             this.btnRefresh.Enabled = false;
-            this.btnRefresh.Location = new System.Drawing.Point(85, 75);
+            this.btnRefresh.Location = new System.Drawing.Point(85, 107);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(61, 23);
             this.btnRefresh.TabIndex = 11;
@@ -118,7 +135,7 @@ namespace DCT.UI
             // btnLogout
             // 
             this.btnLogout.Enabled = false;
-            this.btnLogout.Location = new System.Drawing.Point(152, 75);
+            this.btnLogout.Location = new System.Drawing.Point(152, 107);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(61, 23);
             this.btnLogout.TabIndex = 10;
@@ -128,7 +145,7 @@ namespace DCT.UI
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(18, 75);
+            this.btnLogin.Location = new System.Drawing.Point(18, 107);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(61, 23);
             this.btnLogin.TabIndex = 9;
@@ -178,7 +195,9 @@ namespace DCT.UI
             this.clmInRoom,
             this.clmMobs,
             this.clmEXP,
-            this.clmAvgExp});
+            this.clmAvgExp,
+            this.clmRage,
+            this.clmLevel});
             this.lvAccounts.Dock = System.Windows.Forms.DockStyle.Top;
             this.lvAccounts.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvAccounts.FullRowSelect = true;
@@ -186,7 +205,7 @@ namespace DCT.UI
             this.lvAccounts.Location = new System.Drawing.Point(3, 16);
             this.lvAccounts.MultiSelect = false;
             this.lvAccounts.Name = "lvAccounts";
-            this.lvAccounts.Size = new System.Drawing.Size(224, 298);
+            this.lvAccounts.Size = new System.Drawing.Size(320, 298);
             this.lvAccounts.TabIndex = 1;
             this.lvAccounts.UseCompatibleStateImageBehavior = false;
             this.lvAccounts.View = System.Windows.Forms.View.Details;
@@ -195,16 +214,17 @@ namespace DCT.UI
             // clmCharName
             // 
             this.clmCharName.Text = "Name";
+            this.clmCharName.Width = 100;
             // 
             // clmInRoom
             // 
-            this.clmInRoom.Text = "In";
-            this.clmInRoom.Width = 30;
+            this.clmInRoom.Text = "Room";
+            this.clmInRoom.Width = 50;
             // 
             // clmMobs
             // 
             this.clmMobs.Text = "Mobs";
-            this.clmMobs.Width = 30;
+            this.clmMobs.Width = 40;
             // 
             // clmEXP
             // 
@@ -226,16 +246,32 @@ namespace DCT.UI
             this.login_normal.DoWork += new System.ComponentModel.DoWorkEventHandler(this.login_normal_DoWork);
             this.login_normal.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.login_normal_RunWorkerCompleted);
             // 
-            // lnkChkServer
+            // clmRage
             // 
-            this.lnkChkServer.AutoSize = true;
-            this.lnkChkServer.Location = new System.Drawing.Point(120, 5);
-            this.lnkChkServer.Name = "lnkChkServer";
-            this.lnkChkServer.Size = new System.Drawing.Size(76, 13);
-            this.lnkChkServer.TabIndex = 12;
-            this.lnkChkServer.TabStop = true;
-            this.lnkChkServer.Text = "Check server..";
-            this.lnkChkServer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkChkServer_LinkClicked);
+            this.clmRage.Text = "Rage";
+            this.clmRage.Width = 50;
+            // 
+            // clmLevel
+            // 
+            this.clmLevel.Text = "Level";
+            this.clmLevel.Width = 40;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(13, 73);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(83, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Security Answer";
+            // 
+            // tbSecurity
+            // 
+            this.tbSecurity.Location = new System.Drawing.Point(107, 71);
+            this.tbSecurity.Name = "tbSecurity";
+            this.tbSecurity.Size = new System.Drawing.Size(110, 20);
+            this.tbSecurity.TabIndex = 14;
+            this.tbSecurity.UseSystemPasswordChar = true;
             // 
             // AccountsPanel
             // 
@@ -243,7 +279,7 @@ namespace DCT.UI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.grpConnections);
             this.Name = "AccountsPanel";
-            this.Size = new System.Drawing.Size(230, 422);
+            this.Size = new System.Drawing.Size(326, 450);
             this.grpConnections.ResumeLayout(false);
             this.pnl.ResumeLayout(false);
             this.pnl.PerformLayout();
@@ -273,5 +309,9 @@ namespace DCT.UI
         private System.ComponentModel.BackgroundWorker login_rgsessid;
         private System.ComponentModel.BackgroundWorker login_normal;
         private System.Windows.Forms.LinkLabel lnkChkServer;
+        private System.Windows.Forms.ColumnHeader clmRage;
+        private System.Windows.Forms.ColumnHeader clmLevel;
+        private System.Windows.Forms.TextBox tbSecurity;
+        private System.Windows.Forms.Label label3;
     }
 }

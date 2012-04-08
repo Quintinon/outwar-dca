@@ -111,6 +111,48 @@ namespace DCT.Outwar.World
             FollowPath(nodes);
         }
 
+        // Potential Multi-room pathing
+        // Returns which roomId was visited
+        internal int PathfindTo(List<int> roomIds)
+        {
+            if (Location == null || roomIds.Count == 0)
+            {
+                return -1;
+            }
+            else if (roomIds.Contains(Location.Id))
+            {
+                return Location.Id;
+            }
+
+            CoreUI.Instance.LogPanel.Log("Constructing path for " + Account.Name + " to a room in a list of " + roomIds.Count + " rooms");
+
+            List<int> nodes = new List<int>();
+            nodes = Pathfinder.BFS(Location.Id, roomIds);
+
+            if (nodes == null)
+            {
+                if (CoreUI.Instance.Settings.AutoTeleport ||
+                    MessageBox.Show("The program cannot build a path from your current area to your chosen location.  Do you want to teleport to the nearest bar and try again?  Recommended 'Yes' unless you are in a separated area such as Stoneraven.\n\n(this option can be automatically enabled under the Attack tab)", "Pathfinding Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    == DialogResult.Yes)
+                {
+                    CoreUI.Instance.LogPanel.Log(Account.Name + " teleporting...");
+
+                    Account.Socket.Get("world.php?teleport=1");
+                    RefreshRoom();
+                    nodes = Pathfinder.BFS(Location.Id, roomIds);
+                }
+                else
+                {
+                    CoreUI.Instance.StopAttacking(true);
+                    return -1;
+                }
+                //DCErrorReport.Report(this, "Null nodes path (unfamiliar location); teleport attempt possible");
+            }
+
+            FollowPath(nodes);
+            return nodes[nodes.Count - 1];
+        }
+
         internal void CoverArea()
         {
             mVisited = new List<int>();
@@ -349,6 +391,7 @@ namespace DCT.Outwar.World
             mTrainRoomStart = Location.Id;
 
             List<List<int>> paths = new List<List<int>>();
+            // TODO: Use multipathing, or find way to use the train button
             paths.Add(Pathfinder.BFS(Location.Id, 258)); // dustglass
             paths.Add(Pathfinder.BFS(Location.Id, 241)); // drunkenclam
             paths.Add(Pathfinder.BFS(Location.Id, 403)); //hardiron

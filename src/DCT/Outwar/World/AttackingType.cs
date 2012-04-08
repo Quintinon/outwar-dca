@@ -5,6 +5,7 @@ namespace DCT.Outwar.World
         CurrentArea,
         MultiArea,
         Mobs,
-        Rooms
+        Rooms,
+        Quests
     }
 }

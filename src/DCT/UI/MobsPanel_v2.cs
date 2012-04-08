@@ -65,8 +65,8 @@ namespace DCT.UI
             public Boolean IsChecked { get; set; }
             public String Name { get; set; }
             public int Count { get; set; }
-            public long Level { get; set; }
-            public long RageCost { get; set; }
+            public int Level { get; set; }
+            public int RageCost { get; set; }
             public List<int> Ids { get; set; }
             public List<int> Rooms { get; set; }
 
@@ -103,9 +103,9 @@ namespace DCT.UI
                         DataGridMob dgm = new DataGridMob(mb.Name);
                         dgm.Ids.Add((int)mb.Id);
                         dgm.Rooms.Add(mb.Room);
-                        dgm.RageCost = mb.Rage;
+                        dgm.RageCost = (int)mb.Rage;
                         dgm.IsChecked = false;
-                        dgm.Level = mb.Level;
+                        dgm.Level = (int)mb.Level;
                         dgm.Count = 1;
                         Mobs.Add(dgm);
                     }
@@ -205,7 +205,7 @@ namespace DCT.UI
             int i = 0;
             foreach (DataGridViewRow row in dgvMobs.Rows)
             {
-                if (((string)row.Cells[0].Value).ToLower().Equals(name))
+                if (row.Cells[1].Value.ToString().ToLower().Equals(name))
                 {
                     row.Cells[0].Value = true;
                     i++;
@@ -317,17 +317,71 @@ namespace DCT.UI
             mUI.InvokePathfind((int)dgo.Rooms[0]);
         }
 
-        private void lvMobs_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void dgvMobs_CurrentCellChanged(object sender, EventArgs e)
         {
+
             if (dgvMobs.SelectedRows.Count < 1)
             {
                 btnMobGo.Text = "Go to selection";
                 return;
             }
-            string txt = (string)dgvMobs.SelectedRows[0].Cells[1].Value;
+            string txt = dgvMobs.SelectedRows[0].Cells[1].Value.ToString();
             if (txt.StartsWith("A "))
                 txt = txt.Substring(2);
             btnMobGo.Text = string.Format("Go to {0}", txt);
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            for(int i = 0; i < dgvMobs.Rows.Count; i++)
+            {
+                DataGridMob dgm = (DataGridMob)dgvMobs.Rows[i].Cells[1].Value;
+                if (dgm.Name.ToLower().Contains(textBox1.Text.ToLower()))
+                {
+                    dgvMobs.Rows[i].Cells[1].Style.ForeColor = dgvMobs.Rows[i].DefaultCellStyle.ForeColor;
+                    dgvMobs.Rows[i].Cells[1].Style.SelectionForeColor = dgvMobs.Rows[i].DefaultCellStyle.SelectionForeColor;
+                }
+                else
+                {
+                    dgvMobs.Rows[i].Cells[1].Style.ForeColor = System.Drawing.Color.Gray;
+                    dgvMobs.Rows[i].Cells[1].Style.SelectionForeColor = System.Drawing.Color.DarkGray;
+                }
+            }
+
+            System.ComponentModel.ListSortDirection direction;
+            DataGridViewColumn column = dgvMobs.SortedColumn;
+            if (column == null)
+                column = dgvMobs.Columns[1];
+            if (dgvMobs.SortOrder == SortOrder.Descending)
+                direction = System.ComponentModel.ListSortDirection.Descending;
+            else
+                direction = System.ComponentModel.ListSortDirection.Ascending;
+            dgvMobs.Sort(column, direction);
+        }
+
+        private void dgvMobs_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            System.Drawing.Color c1, c2;
+            c1 = dgvMobs.Rows[e.RowIndex1].Cells[1].Style.ForeColor;
+            c2 = dgvMobs.Rows[e.RowIndex2].Cells[1].Style.ForeColor;
+            if (c1 != c2)
+            {
+                e.Handled = true;
+                if (c1 == System.Drawing.Color.Gray)
+                    e.SortResult = 1;
+                else
+                    e.SortResult = -1;
+
+                if (((DataGridView)sender).SortOrder == SortOrder.Descending)
+                    e.SortResult *= -1;
+            }
+        }
+
+        private void dgvMobs_Leave(object sender, EventArgs e)
+        {
+            dgvMobs.EndEdit();
+        }
+
     }
 }

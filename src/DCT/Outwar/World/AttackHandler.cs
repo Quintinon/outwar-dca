@@ -13,6 +13,7 @@ namespace DCT.Outwar.World
             internal string Name { get; private set; }
             internal int RoomId { get; private set; }
             internal int Id { get; private set; }
+            internal int Count { get; set; }
             public MobArg(int id, int roomid, string name)
             {
                 Id = id;
@@ -54,6 +55,11 @@ namespace DCT.Outwar.World
         internal static void BeginRooms(List<int> rooms)
         {
             mRooms = rooms;
+            StartRun();
+        }
+
+        internal static void BeginQuests()
+        {
             StartRun();
         }
 
@@ -128,6 +134,9 @@ namespace DCT.Outwar.World
                         case AttackingType.Rooms:
                             CoreUI.Instance.DoAttackRooms(mRooms);
                             break;
+                        case AttackingType.Quests:
+                            CoreUI.Instance.DoAttackQuests();
+                            break;
                     }
 
 
@@ -149,8 +158,8 @@ namespace DCT.Outwar.World
             // submit any newfound mobs to pathfinding database
             if (Pathfinding.MobCollector.Count > 0)
             {
-                CoreUI.Instance.LogPanel.Log("Submitting " + Pathfinding.MobCollector.Count + " new mobs");
-                Pathfinding.MobCollector.Submit();
+                CoreUI.Instance.LogPanel.Log("Found " + Pathfinding.MobCollector.Count + " new mobs");
+                //Pathfinding.MobCollector.Submit();
             }
         }
 

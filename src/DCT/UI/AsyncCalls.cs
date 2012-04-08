@@ -148,9 +148,59 @@ namespace DCT.UI
 
         internal void DoAttackMobs(List<AttackHandler.MobArg> mobs)
         {
+            // TODO: Clean this crap up ... what is all this Globals AttackOn checking ...
             Account mAccount = AccountsPanel.Engine.MainAccount;
+            // Generate list of potential rooms to visit
+            List<int> rooms = new List<int>();
 
             foreach (AttackHandler.MobArg arg in mobs)
+            {
+                if (rooms.Contains(arg.RoomId) == false)
+                    rooms.Add(arg.RoomId);
+            }
+            bool quit = false;
+            while (rooms.Count > 0)
+            {
+                if (!Globals.AttackMode || mAccount.Mover.Location == null)
+                {
+                    quit = true;
+                    break;
+                }
+
+                Globals.AttackOn = false;
+
+                int r = mAccount.Mover.PathfindTo(rooms);
+                rooms.Remove(r);
+
+                if (!Globals.AttackMode)
+                {
+                    quit = true;
+                    break;
+                }
+
+                Globals.AttackOn = true;
+
+                foreach (AttackHandler.MobArg arg in mobs)
+                {
+                    if (r == arg.RoomId)
+                    {
+                        //if Arg.Id < 0, supposidly a spawn
+                        if (arg.Id < 0)
+                            AccountsPanel.Engine.MainAccount.Mover.Location.AttackMob(arg.Name);
+                        else
+                            AccountsPanel.Engine.MainAccount.Mover.Location.AttackMob(arg.Id);
+                    }
+                }
+
+                if (!Globals.AttackOn)
+                    break;
+            }
+            if (quit)
+            {
+                LogPanel.Log("Mob coverage quit");
+                StopAttacking(true);
+            }
+            /*foreach (AttackHandler.MobArg arg in mobs)
             {
                 if (!Globals.AttackMode || mAccount.Mover.Location == null)
                     goto quit;
@@ -181,7 +231,7 @@ namespace DCT.UI
             return;
             quit:
             LogPanel.Log("Mob coverage quit");
-            StopAttacking(true);
+            StopAttacking(true);*/
         }
 
         internal void AttackRooms()
@@ -201,7 +251,40 @@ namespace DCT.UI
         {
             Account mAccount = AccountsPanel.Engine.MainAccount;
 
-            foreach (int rm in rooms)
+            bool quit = false;
+            while (rooms.Count > 0)
+            {
+                if (!Globals.AttackMode || mAccount.Mover.Location == null)
+                {
+                    quit = true;
+                    break;
+                }
+
+                Globals.AttackOn = false;
+
+                int r = mAccount.Mover.PathfindTo(rooms);
+                rooms.Remove(r);
+
+                if (!Globals.AttackMode)
+                {
+                    quit = true;
+                    break;
+                }
+
+                Globals.AttackOn = true;
+
+                mAccount.Mover.Location.Attack();
+                if (!Globals.AttackOn)
+                {
+                    return;
+                }
+            }
+            if (quit)
+            {
+                LogPanel.Log("Rooms coverage quit");
+                StopAttacking(true);
+            }
+            /*foreach (int rm in rooms)
             {
                 if (!Globals.AttackMode || mAccount.Mover.Location == null)
                     goto quit;
@@ -224,9 +307,128 @@ namespace DCT.UI
             return;
         quit:
             LogPanel.Log("Rooms coverage quit");
-            StopAttacking(true);
+            StopAttacking(true);*/
         }
 
+        internal void AttackQuests()
+        {
+            SetUpHandler();
+            AttackHandler.BeginQuests();
+        }
+
+        internal void DoAttackQuests()
+        {
+            Account mAccount = AccountsPanel.Engine.MainAccount;
+
+            bool AllCompleted = false;
+            List<string> mobs = new List<string>();
+            List<int> amount = new List<int>();
+            while (Globals.AttackMode && !AllCompleted)
+            {
+                //We need to Enum our quests
+                mAccount.RefreshQuests();
+
+                AllCompleted = true;
+                foreach (Quest q in mAccount.Quests)
+                {
+                    if(q.Completed() == false)
+                    {
+                        AllCompleted = false;
+                        foreach (QuestObjective qo in q.Objectives)
+                        {
+                            if(MobsPanel.Mobs.Contains(new DCT.UI.MobsPanel_v2.DataGridMob(qo.Name)))
+                            {
+                                if(mobs.Contains(qo.Name))
+                                {
+                                    amount[mobs.IndexOf(qo.Name)] += qo.Amount - qo.AmountDone;
+                                }
+                                else
+                                {
+                                    mobs.Add(qo.Name);
+                                    amount.Add(qo.Amount - qo.AmountDone);
+                                }
+                            }
+                            /* TODO
+                             * else
+                             * Find item in item database and go kill THAT mob
+                             */
+                        }
+                    }
+                }
+
+                DoAttackQuestMobs(mobs, amount);
+            }
+        }
+
+        private void DoAttackQuestMobs(List<string> mobs, List<int> amount)
+        {
+
+            // Copied from DoAttackMobs
+            // TODO: Clean this crap up ... what is all this Globals AttackOn checking ...
+            Account mAccount = AccountsPanel.Engine.MainAccount;
+            // Generate list of potential rooms to visit
+            List<int> rooms = new List<int>();
+
+            foreach (string mob in mobs)
+            {
+                int index = MobsPanel.Mobs.IndexOf(new DCT.UI.MobsPanel_v2.DataGridMob(mob));
+                DCT.UI.MobsPanel_v2.DataGridMob dgm = MobsPanel.Mobs[index];
+                foreach(int roomId in dgm.Rooms)
+                    if(rooms.Contains(roomId) == false)
+                        rooms.Add(roomId);
+            }
+            bool quit = false;
+            while (rooms.Count > 0)
+            {
+                if (!Globals.AttackMode || mAccount.Mover.Location == null)
+                {
+                    quit = true;
+                    break;
+                }
+
+                Globals.AttackOn = false;
+
+                int r = mAccount.Mover.PathfindTo(rooms);
+                if (r == -1)
+                {
+                    quit = true;
+                    break;
+                }
+                else if (r < 0)
+                    rooms.Remove(-r);
+                else
+                    rooms.Remove(r);
+
+                if (!Globals.AttackMode)
+                {
+                    quit = true;
+                    break;
+                }
+
+                Globals.AttackOn = true;
+
+                for(int i = 0; i < mobs.Count; i++)
+                {
+                    amount[i] -= AccountsPanel.Engine.MainAccount.Mover.Location.AttackMobs(mobs[i], amount[i]);
+                    /*if (r == arg.RoomId)
+                    {
+                        //if Arg.Id < 0, supposidly a spawn
+                        if (arg.Id < 0)
+                            AccountsPanel.Engine.MainAccount.Mover.Location.AttackMob(arg.Name);
+                        else
+                            AccountsPanel.Engine.MainAccount.Mover.Location.AttackMob(arg.Id);
+                    }*/
+                }
+
+                if (!Globals.AttackOn)
+                    break;
+            }
+            if (quit)
+            {
+                LogPanel.Log("Mob coverage quit");
+                StopAttacking(true);
+            }
+        }
         #endregion
 
         #region Pathfinding

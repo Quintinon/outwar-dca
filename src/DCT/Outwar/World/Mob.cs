@@ -18,6 +18,7 @@ namespace DCT.Outwar.World
         internal bool IsTalkable { get; private set; }
         internal bool IsSpawn { get; private set; }
         internal bool Attacking { get; private set; }
+        internal bool Won { get; private set; }
         private bool mQuit;
 
         private bool FilterOK
@@ -287,6 +288,7 @@ namespace DCT.Outwar.World
         /// <returns>True if thread started; False otherwise</returns>
         internal bool Attack(bool test)
         {
+            Won = false;
             if (mAttacked || (!FilterOK && test) || !IsInRoom
                 || (!Globals.AttackOn || !Globals.AttackMode))
             {
@@ -471,8 +473,9 @@ namespace DCT.Outwar.World
             {
                 CoreUI.Instance.LogPanel.LogAttack(string.Format("{0} lost to {1}", mRoom.Mover.Account.Name, mName));
             }
-            else if (src.Contains("var battle_result"))
+            else if (src.Contains("You have won the battle!"))
             {
+                Won = true;
                 // quest kill count
                 String killProgress = string.Empty;
                 Regex killregex = new Regex(@"\d+/\d+ killed");
@@ -500,6 +503,9 @@ namespace DCT.Outwar.World
                 }
                 attackLogString += killProgress;
                 CoreUI.Instance.LogPanel.LogAttack(attackLogString);
+
+                // Quest Kills
+                // </b>14/60 killed<br>
 
                 // item dropped
                 if (src.Contains("Found "))
